@@ -1,4 +1,5 @@
 /* Inference for Llama-2 Transformer model in pure C, int8 quantized forward pass. */
+#include <time.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -319,6 +320,10 @@ void matmul(float* xout, QuantizedTensor *x, QuantizedTensor *w, int n, int d) {
     // by far the most amount of time is spent inside this little function
     // inputs to this function are both quantized
 
+    // 計測開始
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+
     int i;
     #pragma omp parallel for private(i)
     for (i = 0; i < d; i++) {
@@ -339,6 +344,13 @@ void matmul(float* xout, QuantizedTensor *x, QuantizedTensor *w, int n, int d) {
 
         xout[i] = val;
     }
+    // 計測終了
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    double time_taken = (end.tv_sec - start.tv_sec) * 1e9;
+    time_taken = (time_taken + (end.tv_nsec - start.tv_nsec)) * 1e-9;
+
+    // 実行時間を表示
+    printf("matmul関数の実行時間: %f秒\n", time_taken);
 }
 
 float* forward(Transformer* transformer, int token, int pos) {
