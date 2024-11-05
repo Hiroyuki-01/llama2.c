@@ -2,6 +2,7 @@
 # example override to clang: make run CC=clang
 CC = gcc-14
 
+
 # the most basic way of building that is most likely to work on most systems
 .PHONY: run
 run: run.c
@@ -33,8 +34,13 @@ runfast: run.c
 # OMP_NUM_THREADS=4 ./run out/model.bin
 .PHONY: runomp
 runomp: run.c
-	$(CC) -Ofast -fopenmp -march=native run.c  -lm  -o run
-	$(CC) -Ofast -fopenmp -march=native runq.c  -lm  -o runq
+	$(CC) -Ofast -fopenmp  -march=native run.c  -lm  -o run
+	$(CC) -Ofast -fopenmp  -march=native runq.c  -lm  -o runq
+
+.PHONY: runqprof
+runqprof: runq.c
+	$(CC) -Ofast -fopenmp -pg -o runq runq.c -lm
+
 
 .PHONY: win64
 win64:
