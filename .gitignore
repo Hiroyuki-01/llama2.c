@@ -4,3 +4,4 @@ run
 runq
 result*.trace
 settings.json
+*.csv
