@@ -617,7 +617,7 @@ float *forward(Transformer *transformer, int token, int pos)
 
         // CSVファイルに記録
         char header[50];
-        snprintf(header, sizeof(header), "Layer %d,Matmul Call,Time (ms)", l + 1);
+        snprintf(header, sizeof(header), "Layer %d,Matmul Call Time (ms)", l + 1);
         char data[7][50];
         const char *data_ptrs[7];
         for (int i = 0; i < 7; i++)
@@ -626,7 +626,7 @@ float *forward(Transformer *transformer, int token, int pos)
             data_ptrs[i] = data[i];
         }
         char filename[50];
-        snprintf(filename, sizeof(filename), "matmul_times_layer_%d.csv", l + 1);
+        snprintf(filename, sizeof(filename), "test/matmul_times_layer_%d.csv", l + 1);
         write_to_csv(filename, header, data_ptrs, 7);
     }
 
