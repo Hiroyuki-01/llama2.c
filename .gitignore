@@ -3,3 +3,4 @@ llama2_7b.bin
 run
 runq
 result*.trace
+settings.json
