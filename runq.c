@@ -635,7 +635,26 @@ float *forward(Transformer *transformer, int token, int pos)
 
     // classifier into logits
     quantize(&s->xq, x, dim);
+
+    double start_time = time_in_ms();
     matmul(s->logits, &s->xq, w->wcls, dim, p->vocab_size);
+    double end_time = time_in_ms();
+    double final_matmul_time = end_time - start_time;
+
+    // CSVファイルに記録
+    char final_header[50];
+    snprintf(final_header, sizeof(final_header), "Layer final, Matmul Call Time (ms)");
+    char final_data[1][50];
+    const char *final_data_ptrs[1];
+
+    snprintf(final_data[0], sizeof(final_data[0]), "%d,%f", 1, final_matmul_time);
+    final_data_ptrs[0] = final_data[0];
+
+    char final_filename[50];
+    snprintf(final_filename, sizeof(final_filename), "test/matmul_times_layer_final.csv");
+    write_to_csv(final_filename, final_header, final_data_ptrs, 1);
+
+
     return s->logits;
 }
 
